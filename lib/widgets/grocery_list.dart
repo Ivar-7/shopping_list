@@ -26,8 +26,8 @@ class _GroceryListState extends State<GroceryList> {
   void _loadItems() async {
     final url = Uri.https('shopping-list-a7cda-default-rtdb.firebaseio.com',
         'shopping-list.json');
-
     final response = await http.get(url);
+
     final Map<String, dynamic> listData = json.decode(response.body);
     for (final item in listData.entries) {
       final category = categories.entries.firstWhere(
@@ -46,12 +46,16 @@ class _GroceryListState extends State<GroceryList> {
   }
 
   void _addItem() async {
-    await Navigator.of(context).push<GroceryItem>(
+    final newItem = await Navigator.of(context).push<GroceryItem>(
       MaterialPageRoute(
         builder: (ctx) => const NewItem(),
       ),
     );
-    _loadItems();
+    if (newItem != null) {
+      setState(() {
+        _groceryItems.add(newItem);
+      });
+    }
   }
 
   void _removeItem(GroceryItem item) {
