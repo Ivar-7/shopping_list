@@ -27,37 +27,38 @@ class _GroceryListState extends State<GroceryList> {
 
   void _loadItems() async {
     final url = Uri.https(
-        'flutter-prep-default-rtdb.firebaseio.com', 'shopping-list.json');
-
+        'shopping-list-a7cda-default-rtdb.firebaseio.com',
+        'shopping-list.json');
+  
     try {
       final response = await http.get(url);
-
+  
       if (response.statusCode >= 400) {
         setState(() {
           _error = 'Failed to fetch data. Please try again later.';
         });
       }
-
+  
       if (response.body == 'null') {
         setState(() {
           _isLoading = false;
         });
         return;
       }
-
+  
       final Map<String, dynamic> listData = json.decode(response.body);
+      // print(listData);
       final List<GroceryItem> loadedItems = [];
       for (final item in listData.entries) {
         final category = categories.entries
             .firstWhere(
-                (catItem) => catItem.value.title == item.value['category'])
-            .value;
+            (catItem) => catItem.value.title == item.value['category']);
         loadedItems.add(
           GroceryItem(
             id: item.key,
             name: item.value['name'],
             quantity: item.value['quantity'],
-            category: category,
+            category: category.value,
           ),
         );
       }
@@ -66,6 +67,7 @@ class _GroceryListState extends State<GroceryList> {
         _isLoading = false;
       });
     } catch (error) {
+      // print(error);
       setState(() {
         _error = 'Something went wrong! Please try again later.';
       });
