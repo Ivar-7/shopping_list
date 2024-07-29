@@ -1,8 +1,6 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-
 import 'package:shopping_list/data/categories.dart';
 import 'package:shopping_list/models/category.dart';
 import 'package:shopping_list/models/grocery_item.dart';
@@ -29,6 +27,7 @@ class _NewItemState extends State<NewItem> {
       setState(() {
         _isSending = true;
       });
+
       final url = Uri.https(
           'flutter-prep-default-rtdb.firebaseio.com', 'shopping-list.json');
       final response = await http.post(
@@ -47,7 +46,7 @@ class _NewItemState extends State<NewItem> {
 
       final Map<String, dynamic> resData = json.decode(response.body);
 
-      if (!context.mounted) {
+      if (!mounted) {
         return;
       }
 
@@ -89,12 +88,9 @@ class _NewItemState extends State<NewItem> {
                   return null;
                 },
                 onSaved: (value) {
-                  // if (value == null) {
-                  //   return;
-                  // }
                   _enteredName = value!;
                 },
-              ), // instead of TextField()
+              ),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
